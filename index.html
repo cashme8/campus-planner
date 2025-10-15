@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Life Planner</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <header>
+    <h1>Campus Life Planner</h1>
+    <nav>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#records">Tasks</a>
+      <a href="#form">Add Task</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="dashboard">
+      <h2>Dashboard</h2>
+      <div id="stats"></div>
+    </section>
+
+    <section id="records">
+      <h2>Tasks</h2>
+      <input type="text" id="search" placeholder="Search with regex..." />
+      <table id="taskTable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Due Date</th>
+            <th>Duration</th>
+            <th>Tag</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="form">
+      <h2>Add/Edit Task</h2>
+      <form id="taskForm">
+        <label>Title <input type="text" id="title" required /></label>
+        <label>Due Date <input type="date" id="dueDate" required /></label>
+        <label>Duration (min) <input type="number" id="duration" required /></label>
+        <label>Tag <input type="text" id="tag" required /></label>
+        <button type="submit">Save Task</button>
+      </form>
+      <div id="formErrors" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="settings">
+      <h2>Settings</h2>
+      <label>Weekly Cap (minutes) <input type="number" id="cap" /></label>
+    </section>
+  </main>
+
+  <footer>
+    <p>Created by You | <a href="mailto:you@example.com">Email</a> | <a href="https://github.com/yourusername">GitHub</a></p>
+  </footer>
+
+  <script type="module" src="scripts/ui.js"></script>
+</body>
+</html>

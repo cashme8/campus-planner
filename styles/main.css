@@ -1,0 +1,53 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+header, nav, main, section, footer {
+  padding: 1rem;
+}
+
+nav a {
+  margin-right: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+}
+
+input:focus, button:focus {
+  outline: 2px solid blue;
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  th {
+    background: #eee;
+  }
+
+  td {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td::before {
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 0.5rem;
+    font-weight: bold;
+    content: attr(data-label);
+  }
+}
