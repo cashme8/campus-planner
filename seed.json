@@ -1,0 +1,47 @@
+[
+  {
+    "id": "task_001",
+    "title": "Math homework",
+    "dueDate": "2025-10-16",
+    "duration": 90,
+    "tag": "Study",
+    "createdAt": "2025-10-10T08:00:00Z",
+    "updatedAt": "2025-10-10T08:00:00Z"
+  },
+  {
+    "id": "task_002",
+    "title": "Club meeting",
+    "dueDate": "2025-10-17",
+    "duration": 60,
+    "tag": "Social",
+    "createdAt": "2025-10-10T09:00:00Z",
+    "updatedAt": "2025-10-10T09:00:00Z"
+  },
+  {
+    "id": "task_003",
+    "title": "Chemistry lab prep",
+    "dueDate": "2025-10-18",
+    "duration": 120,
+    "tag": "Study",
+    "createdAt": "2025-10-10T10:00:00Z",
+    "updatedAt": "2025-10-10T10:00:00Z"
+  },
+  {
+    "id": "task_004",
+    "title": "Movie night",
+    "dueDate": "2025-10-19",
+    "duration": 150,
+    "tag": "Entertainment",
+    "createdAt": "2025-10-10T11:00:00Z",
+    "updatedAt": "2025-10-10T11:00:00Z"
+  },
+  {
+    "id": "task_005",
+    "title": "Group project",
+    "dueDate": "2025-10-20",
+    "duration": 180,
+    "tag": "Collaboration",
+    "createdAt": "2025-10-10T12:00:00Z",
+    "updatedAt": "2025-10-10T12:00:00Z"
+  }
+]

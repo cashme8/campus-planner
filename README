@@ -1,0 +1,48 @@
+# Campus Life Planner
+
+A responsive, accessible web app for managing student tasks and events. Built with vanilla HTML, CSS, and JavaScript.
+
+## 🌟 Chosen Theme
+**Campus Life Planner** — track tasks/events with durations, tags, and due dates.
+
+## 🚀 Features
+- Semantic HTML5 layout with ARIA landmarks
+- Mobile-first responsive design (360px, 768px, 1024px)
+- Add/edit/delete tasks with inline validation
+- Regex-powered live search with safe compiler
+- Dashboard with total tasks, duration sum, top tag, and weekly cap logic
+- LocalStorage persistence with JSON import/export
+- Manual cap setting with ARIA live feedback
+- Accessible keyboard navigation and skip-to-content link
+
+## 🔍 Regex Catalog
+
+| Field       | Pattern | Description |
+|-------------|---------|-------------|
+| Title       | `/^\S(?:.*\S)?$/` | No leading/trailing spaces |
+| Duration    | `/^(0|[1-9]\d*)(\.\d{1,2})?$/` | Positive number with up to 2 decimals |
+| Due Date    | `/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/` | Valid YYYY-MM-DD format |
+| Tag         | `/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/` | Letters, spaces, hyphens |
+| Advanced    | `/\b\d{2}:\d{2}\b/` | Detect time tokens |
+
+## ⌨️ Keyboard Map
+- `Tab`: Navigate between inputs and buttons
+- `Enter`: Submit form or confirm delete
+- `Esc`: Cancel edit (if implemented)
+- `Skip link`: Jump to main content
+
+## ♿ Accessibility Notes
+- Semantic landmarks (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`)
+- Visible focus styles
+- ARIA live regions for cap alerts
+- Labels bound to inputs
+- Contrast-checked color palette
+
+## 🧪 How to Run Tests
+Open `tests.html` in your browser to verify regex patterns and validation logic.
+
+## 🌐 Deployment
+Live site: [https://yourusername.github.io/campus-planner](https://yourusername.github.io/campus-planner)
+
+## 📹 Demo Video
+Unlisted YouTube link: [https://youtu.be/your-demo-video](https://youtu.be/your-demo-video)
