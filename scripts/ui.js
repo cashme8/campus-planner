@@ -22,14 +22,14 @@ function renderTasks(re = null) {
       <td>${task.duration}</td>
       <td>${highlight(task.tag, re)}</td>
       <td>
-        <button type="button" onclick="editTask('${task.id}')">Edit</button>
-        <button type="button" onclick="deleteTaskUI('${task.id}')">Delete</button>
+        <button onclick="editTask('${task.id}')">Edit</button>
+        <button onclick="deleteTask('${task.id}')">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
-  updateStats();
 }
+
 
 // Update stats dashboard
 function updateStats() {
@@ -85,13 +85,45 @@ form.addEventListener('submit', defaultSubmit);
 window.editTask = function(id) {
   const task = tasks.find(t => t.id === id);
   if (!task) return;
-  editingId = id;
+
+  // Populate form
   form.title.value = task.title;
   form.dueDate.value = task.dueDate;
   form.duration.value = task.duration;
   form.tag.value = task.tag;
-  form.querySelector('button').textContent = 'Update Task';
+
+  // Change form submit behavior
+  form.onsubmit = function(e) {
+    e.preventDefault();
+    const errors = validate({
+      title: form.title.value.trim(),
+      dueDate: form.dueDate.value,
+      duration: form.duration.value,
+      tag: form.tag.value.trim()
+    });
+
+    if (errors.length) {
+      errorsDiv.textContent = errors.join(', ');
+      return;
+    }
+
+    // Update task
+    task.title = form.title.value.trim();
+    task.dueDate = form.dueDate.value;
+    task.duration = form.duration.value;
+    task.tag = form.tag.value.trim();
+    task.updatedAt = new Date().toISOString();
+
+    localStorage.setItem('planner:data', JSON.stringify(tasks));
+    form.reset();
+    errorsDiv.textContent = '';
+
+    // Restore normal add behavior
+    form.onsubmit = addTaskSubmitHandler;
+    renderTasks();
+  };
 };
+
 
 // Delete task
 window.deleteTaskUI = function(id) {
