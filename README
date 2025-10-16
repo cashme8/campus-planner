@@ -2,10 +2,10 @@
 
 A responsive, accessible web app for managing student tasks and events. Built with vanilla HTML, CSS, and JavaScript.
 
-## 🌟 Chosen Theme
+## Chosen Theme
 **Campus Life Planner** — track tasks/events with durations, tags, and due dates.
 
-## 🚀 Features
+## Features
 - Semantic HTML5 layout with ARIA landmarks
 - Mobile-first responsive design (360px, 768px, 1024px)
 - Add/edit/delete tasks with inline validation
@@ -15,7 +15,7 @@ A responsive, accessible web app for managing student tasks and events. Built wi
 - Manual cap setting with ARIA live feedback
 - Accessible keyboard navigation and skip-to-content link
 
-## 🔍 Regex Catalog
+## Regex Catalog
 
 | Field       | Pattern | Description |
 |-------------|---------|-------------|
@@ -25,24 +25,49 @@ A responsive, accessible web app for managing student tasks and events. Built wi
 | Tag         | `/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/` | Letters, spaces, hyphens |
 | Advanced    | `/\b\d{2}:\d{2}\b/` | Detect time tokens |
 
-## ⌨️ Keyboard Map
+## Keyboard Map
 - `Tab`: Navigate between inputs and buttons
 - `Enter`: Submit form or confirm delete
 - `Esc`: Cancel edit (if implemented)
 - `Skip link`: Jump to main content
 
-## ♿ Accessibility Notes
+## Accessibility Notes
 - Semantic landmarks (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`)
 - Visible focus styles
 - ARIA live regions for cap alerts
 - Labels bound to inputs
 - Contrast-checked color palette
 
-## 🧪 How to Run Tests
-Open `tests.html` in your browser to verify regex patterns and validation logic.
+## Features
+- **Add/Edit/Delete Tasks** with persistence in localStorage.  
+- **Dashboard/Stats:** Total tasks, total duration, weekly cap remaining, last-7-days trend.  
+- **Regex Search & Highlight:** Live search with safe regex compilation.  
+- **Validation:** 4+ regex rules including advanced back-reference for duplicate words.  
+- **Settings:** Set and persist weekly cap for task durations.  
+- **Responsive Design:** Mobile-first, works across three breakpoints (~360px, 768px, 1024px).  
+- **Accessibility (a11y):** Keyboard navigation, visible focus, ARIA live regions, labels bound to inputs.
 
-## 🌐 Deployment
-Live site: [https://yourusername.github.io/campus-planner](https://yourusername.github.io/campus-planner)
+---
+
+## Data Model
+Each task is stored as:
+
+```json
+{
+  "id": "1672531200000",
+  "title": "Math homework",
+  "dueDate": "2025-10-20",
+  "duration": "90",
+  "tag": "Study",
+  "createdAt": "2025-10-16T10:00:00Z",
+  "updatedAt": "2025-10-16T10:00:00Z"
+}
+
 
 ## 📹 Demo Video
 Unlisted YouTube link: [https://youtu.be/your-demo-video](https://youtu.be/your-demo-video)
+
+
+**Author:** KABANDA GISLAIN  
+**GitHub:** [https://github.com/cashme8](https://github.com/cashme8)  
+**Live App:** [https://cashme8.github.io/campus-planner/](https://cashme8.github.io/campus-planner/)

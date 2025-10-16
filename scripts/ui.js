@@ -1,4 +1,4 @@
-import { tasks, addTask } from './state.js';
+import { tasks, addTask, updateTask, deleteTask, cap, setCap } from './state.js';
 import { validate } from './validators.js';
 import { compileRegex, highlight } from './search.js';
 
@@ -6,7 +6,12 @@ const tbody = document.querySelector('#taskTable tbody');
 const form = document.querySelector('#taskForm');
 const searchInput = document.querySelector('#search');
 const errorsDiv = document.querySelector('#formErrors');
+const statsDiv = document.getElementById('stats');
+const capInput = document.getElementById('cap');
 
+let editingId = null;
+
+// Render tasks table
 function renderTasks(re = null) {
   tbody.innerHTML = '';
   tasks.forEach(task => {
@@ -16,13 +21,38 @@ function renderTasks(re = null) {
       <td>${task.dueDate}</td>
       <td>${task.duration}</td>
       <td>${highlight(task.tag, re)}</td>
-      <td><button onclick="deleteTask('${task.id}')">Delete</button></td>
+      <td>
+        <button type="button" onclick="editTask('${task.id}')">Edit</button>
+        <button type="button" onclick="deleteTaskUI('${task.id}')">Delete</button>
+      </td>
     `;
     tbody.appendChild(tr);
   });
+  updateStats();
 }
 
-form.addEventListener('submit', e => {
+// Update stats dashboard
+function updateStats() {
+  const totalTasks = tasks.length;
+  const totalDuration = tasks.reduce((sum, t) => sum + Number(t.duration), 0);
+  const capRemaining = cap - totalDuration;
+  // Last 7 days count
+  const last7Days = tasks.filter(t => {
+    const taskDate = new Date(t.dueDate);
+    const diff = (new Date() - taskDate) / (1000 * 60 * 60 * 24);
+    return diff <= 7 && diff >= 0;
+  }).length;
+
+  statsDiv.innerHTML = `
+    <div>Total Tasks: ${totalTasks}</div>
+    <div>Total Duration: ${totalDuration} min</div>
+    <div>Cap Remaining: ${capRemaining >= 0 ? capRemaining : 0} min</div>
+    <div>Tasks Last 7 Days: ${last7Days}</div>
+  `;
+}
+
+// Default form submit behavior
+function defaultSubmit(e) {
   e.preventDefault();
   const task = {
     title: form.title.value.trim(),
@@ -33,25 +63,56 @@ form.addEventListener('submit', e => {
   const errors = validate(task);
   if (errors.length) {
     errorsDiv.textContent = errors.join(', ');
+    return;
+  }
+
+  if (editingId) {
+    updateTask(editingId, task);
+    editingId = null;
   } else {
     addTask(task);
-    form.reset();
-    errorsDiv.textContent = '';
-    renderTasks();
   }
-});
 
-searchInput.addEventListener('input', () => {
-  const re = compileRegex(searchInput.value);
-  renderTasks(re);
-});
+  form.reset();
+  errorsDiv.textContent = '';
+  renderTasks();
+}
 
-window.deleteTask = function(id) {
-  const i = tasks.findIndex(t => t.id === id);
-  if (i !== -1) {
-    tasks.splice(i, 1);
+// Form submit
+form.addEventListener('submit', defaultSubmit);
+
+// Edit task
+window.editTask = function(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  editingId = id;
+  form.title.value = task.title;
+  form.dueDate.value = task.dueDate;
+  form.duration.value = task.duration;
+  form.tag.value = task.tag;
+  form.querySelector('button').textContent = 'Update Task';
+};
+
+// Delete task
+window.deleteTaskUI = function(id) {
+  if (confirm('Are you sure you want to delete this task?')) {
+    deleteTask(id);
     renderTasks();
   }
 };
 
+// Regex search
+searchInput.addEventListener('input', () => {
+  const re = searchInput.value.trim() ? compileRegex(searchInput.value) : null;
+  renderTasks(re);
+});
+
+// Cap input
+capInput.value = cap;
+capInput.addEventListener('change', () => {
+  setCap(capInput.value);
+  renderTasks();
+});
+
+// Initial render
 renderTasks();
