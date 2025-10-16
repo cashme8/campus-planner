@@ -1,17 +1,17 @@
-import { tasks, addTask, updateTask, deleteTask, cap, setCap } from './state.js';
+import { tasks, addTask, cap } from './state.js';
 import { validate } from './validators.js';
 import { compileRegex, highlight } from './search.js';
+import { save } from './storage.js';
 
+// DOM elements
 const tbody = document.querySelector('#taskTable tbody');
 const form = document.querySelector('#taskForm');
 const searchInput = document.querySelector('#search');
 const errorsDiv = document.querySelector('#formErrors');
-const statsDiv = document.getElementById('stats');
-const capInput = document.getElementById('cap');
+const statsDiv = document.querySelector('#stats');
+const capInput = document.querySelector('#cap');
 
-let editingId = null;
-
-// Render tasks table
+// ------------------- Render Functions -------------------
 function renderTasks(re = null) {
   tbody.innerHTML = '';
   tasks.forEach(task => {
@@ -23,36 +23,41 @@ function renderTasks(re = null) {
       <td>${highlight(task.tag, re)}</td>
       <td>
         <button onclick="editTask('${task.id}')">Edit</button>
-        <button onclick="deleteTask('${task.id}')">Delete</button>
+        <button class="delete-btn" onclick="deleteTask('${task.id}')">Delete</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
+  renderStats();
 }
 
-
-// Update stats dashboard
-function updateStats() {
+function renderStats() {
+  statsDiv.innerHTML = '';
   const totalTasks = tasks.length;
   const totalDuration = tasks.reduce((sum, t) => sum + Number(t.duration), 0);
-  const capRemaining = cap - totalDuration;
-  // Last 7 days count
+  const tagCounts = {};
+  tasks.forEach(t => tagCounts[t.tag] = (tagCounts[t.tag] || 0) + 1);
+  const topTag = Object.entries(tagCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '-';
+  
+  // Last 7-day trend
+  const today = new Date();
   const last7Days = tasks.filter(t => {
-    const taskDate = new Date(t.dueDate);
-    const diff = (new Date() - taskDate) / (1000 * 60 * 60 * 24);
+    const d = new Date(t.dueDate);
+    const diff = (today - d) / (1000 * 60 * 60 * 24);
     return diff <= 7 && diff >= 0;
   }).length;
 
   statsDiv.innerHTML = `
     <div>Total Tasks: ${totalTasks}</div>
     <div>Total Duration: ${totalDuration} min</div>
-    <div>Cap Remaining: ${capRemaining >= 0 ? capRemaining : 0} min</div>
+    <div>Top Tag: ${topTag}</div>
     <div>Tasks Last 7 Days: ${last7Days}</div>
+    <div>Weekly Cap: ${capInput.value || cap} min</div>
   `;
 }
 
-// Default form submit behavior
-function defaultSubmit(e) {
+// ------------------- Task Functions -------------------
+form.addEventListener('submit', e => {
   e.preventDefault();
   const task = {
     title: form.title.value.trim(),
@@ -63,88 +68,72 @@ function defaultSubmit(e) {
   const errors = validate(task);
   if (errors.length) {
     errorsDiv.textContent = errors.join(', ');
-    return;
-  }
-
-  if (editingId) {
-    updateTask(editingId, task);
-    editingId = null;
   } else {
-    addTask(task);
+    // Add or edit
+    if (form.dataset.editId) {
+      updateTask(form.dataset.editId, task);
+      form.dataset.editId = '';
+    } else {
+      addTask(task);
+    }
+    form.reset();
+    errorsDiv.textContent = '';
+    renderTasks();
   }
+});
 
-  form.reset();
-  errorsDiv.textContent = '';
-  renderTasks();
-}
-
-// Form submit
-form.addEventListener('submit', defaultSubmit);
-
-// Edit task
+// ------------------- Edit / Update -------------------
 window.editTask = function(id) {
   const task = tasks.find(t => t.id === id);
   if (!task) return;
-
-  // Populate form
   form.title.value = task.title;
   form.dueDate.value = task.dueDate;
   form.duration.value = task.duration;
   form.tag.value = task.tag;
-
-  // Change form submit behavior
-  form.onsubmit = function(e) {
-    e.preventDefault();
-    const errors = validate({
-      title: form.title.value.trim(),
-      dueDate: form.dueDate.value,
-      duration: form.duration.value,
-      tag: form.tag.value.trim()
-    });
-
-    if (errors.length) {
-      errorsDiv.textContent = errors.join(', ');
-      return;
-    }
-
-    // Update task
-    task.title = form.title.value.trim();
-    task.dueDate = form.dueDate.value;
-    task.duration = form.duration.value;
-    task.tag = form.tag.value.trim();
-    task.updatedAt = new Date().toISOString();
-
-    localStorage.setItem('planner:data', JSON.stringify(tasks));
-    form.reset();
-    errorsDiv.textContent = '';
-
-    // Restore normal add behavior
-    form.onsubmit = addTaskSubmitHandler;
-    renderTasks();
-  };
+  form.dataset.editId = id;
 };
 
+function updateTask(id, updated) {
+  const index = tasks.findIndex(t => t.id === id);
+  if (index === -1) return;
+  tasks[index] = {
+    ...tasks[index],
+    ...updated,
+    updatedAt: new Date().toISOString()
+  };
+  save(tasks);
+}
 
-// Delete task
-window.deleteTaskUI = function(id) {
-  if (confirm('Are you sure you want to delete this task?')) {
-    deleteTask(id);
+// ------------------- Delete -------------------
+window.deleteTask = function(id) {
+  const i = tasks.findIndex(t => t.id === id);
+  if (i !== -1) {
+    tasks.splice(i, 1);
+    save(tasks);
     renderTasks();
   }
 };
 
-// Regex search
+// ------------------- Regex Search -------------------
 searchInput.addEventListener('input', () => {
-  const re = searchInput.value.trim() ? compileRegex(searchInput.value) : null;
+  const re = compileRegex(searchInput.value);
   renderTasks(re);
 });
 
-// Cap input
-capInput.value = cap;
+// ------------------- Cap/Target Settings -------------------
+capInput.value = cap; // default
 capInput.addEventListener('change', () => {
-  setCap(capInput.value);
-  renderTasks();
+  saveCap(Number(capInput.value));
+  renderStats();
 });
 
-// Initial render
+function saveCap(value) {
+  localStorage.setItem('planner:cap', value);
+}
+
+// Load cap from localStorage if present
+const storedCap = localStorage.getItem('planner:cap');
+if (storedCap) capInput.value = Number(storedCap);
+
+// ------------------- Initial Render -------------------
 renderTasks();

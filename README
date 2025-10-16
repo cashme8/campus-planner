@@ -16,9 +16,7 @@ A responsive, accessible web app for managing student tasks and events. Built wi
 - Manual cap setting with ARIA live feedback
 - Accessible keyboard navigation and skip-to-content link
 
-## Regex Catalog
-
-| Field       | Pattern | Description |
+## Regex Catalog | Field       | Pattern | Description |
 |-------------|---------|-------------|
 | Title       | `/^\S(?:.*\S)?$/` | No leading/trailing spaces |
 | Duration    | `/^(0|[1-9]\d*)(\.\d{1,2})?$/` | Positive number with up to 2 decimals |
