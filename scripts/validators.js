@@ -7,9 +7,9 @@ export const patterns = {
 
 export function validate(task) {
   const errors = [];
-  if (!patterns.title.test(task.title)) errors.push('Invalid title');
-  if (!patterns.duration.test(task.duration)) errors.push('Invalid duration');
-  if (!patterns.date.test(task.dueDate)) errors.push('Invalid date');
+  if (!patterns.title.test(task.title)) errors.push('Invalid title, please make sure its text');
+  if (!patterns.duration.test(task.duration)) errors.push('Invalid duration, please make to add digits');
+  if (!patterns.date.test(task.dueDate)) errors.push('Invalid date, Please chose a valide date');
   if (!patterns.tag.test(task.tag)) errors.push('Invalid tag');
   return errors;
 }
