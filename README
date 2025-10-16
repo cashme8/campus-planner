@@ -25,10 +25,10 @@ A responsive, accessible web app for managing student tasks and events. Built wi
 | Advanced    | `/\b\d{2}:\d{2}\b/` | Detect time tokens |
 
 ## Keyboard Map
-- `Tab`: Navigate between inputs and buttons
-- `Enter`: Submit form or confirm delete
-- `Esc`: Cancel edit (if implemented)
-- `Skip link`: Jump to main content
+ `Tab`: Navigate between inputs and buttons
+ `Enter`: Submit form or confirm delete
+ `Esc`: Cancel edit (if implemented)
+ `Skip link`: Jump to main content
 
 ## Accessibility Notes
 - Semantic landmarks (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`)
@@ -64,9 +64,9 @@ Each task is stored as:
 
 
 ## 📹 Demo Video
-Unlisted YouTube link: [https://youtu.be/your-demo-video](https://youtu.be/your-demo-video)
+Unlisted YouTube link: https://youtu.be/JwAuj6GD3ZM
 
 
 **Author:** KABANDA GISLAIN  
-**GitHub:** [https://github.com/cashme8](https://github.com/cashme8)  
-**Live App:** [https://cashme8.github.io/campus-planner/](https://cashme8.github.io/campus-planner/)
+**GitHub:** https://github.com/cashme8 
+**Live App:** https://cashme8.github.io/campus-planner/
